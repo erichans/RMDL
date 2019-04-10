@@ -22,8 +22,7 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 import re
 from nltk.stem import PorterStemmer, WordNetLemmatizer
-nltk.download("stopwords")
-cachedStopWords = stopwords.words("english")
+from gensim.models import KeyedVectors
 
 def transliterate(line):
     cedilla2latin = [[u'Á', u'A'], [u'á', u'a'], [u'Č', u'C'], [u'č', u'c'], [u'Š', u'S'], [u'š', u's']]
@@ -117,19 +116,12 @@ def loadData_Tokenizer(X_train, X_test,GloVe_DIR,MAX_NB_WORDS,MAX_SEQUENCE_LENGT
     print(text.shape)
     X_train = text[0:len(X_train), ]
     X_test = text[len(X_train):, ]
-    embeddings_index = {}
-    f = open(GloVe_DIR, encoding="utf8")
-    for line in f:
+    
+    word2vec_model = KeyedVectors.load_word2vec_format(GloVe_DIR)
+    embeddings_index = word2vec_model.wv
+    del word2vec_model
 
-        values = line.split()
-        word = values[0]
-        try:
-            coefs = np.asarray(values[1:], dtype='float32')
-        except:
-            pass
-        embeddings_index[word] = coefs
-    f.close()
-    print('Total %s word vectors.' % len(embeddings_index))
+    print('Total %s word vectors.' % len(embeddings_index.vocab))
     return (X_train, X_test, word_index,embeddings_index)
 
 def loadData(X_train, X_test,MAX_NB_WORDS=75000):
