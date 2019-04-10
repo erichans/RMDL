@@ -264,15 +264,14 @@ def Build_Model_RNN_Text(word_index, embeddings_index, nclasses,  MAX_SEQUENCE_L
     print(layer)
     embedding_matrix = np.random.random((len(word_index) + 1, EMBEDDING_DIM))
     for word, i in word_index.items():
-        embedding_vector = embeddings_index.get(word)
-        if embedding_vector is not None:
+        try:
+            embedding_vector = embeddings_index[word]
+        except KeyError as ke:
             # words not found in embedding index will be all-zeros.
-            if len(embedding_matrix[i]) != len(embedding_vector):
-                print("could not broadcast input array from shape", str(len(embedding_matrix[i])),
-                      "into shape", str(len(embedding_vector)), " Please make sure your"
-                                                                " EMBEDDING_DIM is equal to embedding_vector file ,GloVe,")
-                exit(1)
-            embedding_matrix[i] = embedding_vector
+            embedding_vector = np.zeros((1,EMBEDDING_DIM))
+
+        embedding_matrix[i] = embedding_vector
+
     model.add(Embedding(len(word_index) + 1,
                                 EMBEDDING_DIM,
                                 weights=[embedding_matrix],
@@ -324,15 +323,14 @@ def Build_Model_CNN_Text(word_index, embeddings_index, nclasses, MAX_SEQUENCE_LE
     if simple_model:
         embedding_matrix = np.random.random((len(word_index) + 1, EMBEDDING_DIM))
         for word, i in word_index.items():
-            embedding_vector = embeddings_index.get(word)
-            if embedding_vector is not None:
-                if len(embedding_matrix[i]) !=len(embedding_vector):
-                    print("could not broadcast input array from shape",str(len(embedding_matrix[i])),
-                                     "into shape",str(len(embedding_vector))," Please make sure your"
-                                     " EMBEDDING_DIM is equal to embedding_vector file ,GloVe,")
-                    exit(1)
+            try:
+                embedding_vector = embeddings_index[word]
+            except KeyError as ke:
                 # words not found in embedding index will be all-zeros.
-                embedding_matrix[i] = embedding_vector
+                embedding_vector = np.zeros((1,EMBEDDING_DIM))
+
+        embedding_matrix[i] = embedding_vector     
+
         model.add(Embedding(len(word_index) + 1,
                             EMBEDDING_DIM,
                             weights=[embedding_matrix],
@@ -369,16 +367,13 @@ def Build_Model_CNN_Text(word_index, embeddings_index, nclasses, MAX_SEQUENCE_LE
     else:
         embedding_matrix = np.random.random((len(word_index) + 1, EMBEDDING_DIM))
         for word, i in word_index.items():
-            embedding_vector = embeddings_index.get(word)
-            if embedding_vector is not None:
+            try:
+                embedding_vector = embeddings_index[word]
+            except KeyError as ke:
                 # words not found in embedding index will be all-zeros.
-                if len(embedding_matrix[i]) !=len(embedding_vector):
-                    print("could not broadcast input array from shape",str(len(embedding_matrix[i])),
-                                     "into shape",str(len(embedding_vector))," Please make sure your"
-                                     " EMBEDDING_DIM is equal to embedding_vector file ,GloVe,")
-                    exit(1)
+                embedding_vector = np.zeros((1,EMBEDDING_DIM))
 
-                embedding_matrix[i] = embedding_vector
+            embedding_matrix[i] = embedding_vector
 
         embedding_layer = Embedding(len(word_index) + 1,
                                     EMBEDDING_DIM,
