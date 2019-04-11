@@ -211,7 +211,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                               epochs=epochs[0],
                               batch_size=batch_size,
                               callbacks=callbacks_list,
-                              verbose=2)
+                              verbose=1)
             History.append(model_history)
 
             model_tmp.load_weights(filepath)
@@ -288,7 +288,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                               epochs=epochs[1],
                               batch_size=batch_size,
                               callbacks=callbacks_list,
-                              verbose=2)
+                              verbose=1)
             History.append(model_history)
 
             if sparse_categorical:
@@ -354,7 +354,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                                           epochs=epochs[2],
                                           batch_size=batch_size,
                                           callbacks=callbacks_list,
-                                          verbose=2)
+                                          verbose=1)
             History.append(model_history)
 
             model_tmp.load_weights(filepath)
