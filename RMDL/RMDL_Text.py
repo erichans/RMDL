@@ -244,6 +244,9 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
         except Exception as e:
 
             print("Check the Error \n {} ".format(e))
+            if max_hidden_layer_dnn <= 3 and max_nodes_dnn <= 256:
+                print('ending...')
+                exit(1)
 
             print("Error in model", i, "try to re-generate another model")
             if max_hidden_layer_dnn > 3:
@@ -316,6 +319,10 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
             gc.collect()
         except Exception as e:
             print("Check the Error \n {} ".format(e))
+            if max_hidden_layer_rnn <= 3 and max_nodes_rnn <= 64:
+                print('ending...')
+                exit(1)
+
             print("Error in model", i, "try to re-generate another model")
             if max_hidden_layer_rnn > 3:
                 max_hidden_layer_rnn -= 1
@@ -383,6 +390,10 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
             gc.collect()
         except Exception as e:
             print("Check the Error \n {} ".format(e))
+            if max_hidden_layer_cnn <= 5 and max_nodes_cnn <= 128:
+                print('ending...')
+                exit(1)
+
             print("Error in model", i, "try to re-generate an other model")
             if max_hidden_layer_cnn > 5:
                 max_hidden_layer_cnn -= 1
