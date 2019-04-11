@@ -121,6 +121,7 @@ def Build_Model_DNN_Image(shape, number_of_classes, sparse_categorical, min_hidd
         model.compile(loss='categorical_crossentropy',
                       optimizer=optimizors(random_optimizor),
                       metrics=['accuracy'])
+    model.summary()
     return model,model_tmp
 
 
@@ -159,6 +160,7 @@ def Build_Model_DNN_Text(shape, nClasses, sparse_categorical,
         model.compile(loss='categorical_crossentropy',
                       optimizer=optimizors(random_optimizor),
                       metrics=['accuracy'])
+    model.summary()
     return model,model_tem
 
 
@@ -201,7 +203,7 @@ def Build_Model_CNN_Image(shape, nclasses, sparse_categorical,
         model.compile(loss='categorical_crossentropy',
                       optimizer=optimizors(random_optimizor),
                       metrics=['accuracy'])
-
+    model.summary()
     return model,model_tmp
 
 
@@ -243,6 +245,7 @@ def Build_Model_RNN_Image(shape,
         model.compile(loss='categorical_crossentropy',
                   optimizer=optimizors(random_optimizor),
                   metrics=['accuracy'])
+    model.summary()
     return model,model_tmp
 
 
@@ -300,6 +303,7 @@ def Build_Model_RNN_Text(word_index, embeddings_index, nclasses,  MAX_SEQUENCE_L
         model.compile(loss='categorical_crossentropy',
                       optimizer=optimizors(random_optimizor),
                       metrics=['accuracy'])
+    model.summary()
     return model,model_tmp
 
 
@@ -364,6 +368,7 @@ def Build_Model_CNN_Text(word_index, embeddings_index, nclasses, MAX_SEQUENCE_LE
             model.compile(loss='categorical_crossentropy',
                           optimizer=optimizors(random_optimizor),
                           metrics=['accuracy'])
+        model.summary()
     else:
         embedding_matrix = np.random.random((len(word_index) + 1, EMBEDDING_DIM))
         for word, i in word_index.items():
@@ -426,5 +431,5 @@ def Build_Model_CNN_Text(word_index, embeddings_index, nclasses, MAX_SEQUENCE_LE
                           optimizer=optimizors(random_optimizor),
                           metrics=['accuracy'])
 
-
+        model.summary()
     return model,model_tmp
