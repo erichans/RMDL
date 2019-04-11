@@ -212,7 +212,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                                                                    random_optimizor,
                                                                    dropout)
 
-            # K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
+            K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
 
             model_history = model_DNN.fit(x_train_tfidf, y_train,
                               validation_data=(x_test_tfidf, y_test),
