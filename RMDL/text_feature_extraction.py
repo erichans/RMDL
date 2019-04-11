@@ -117,7 +117,7 @@ def loadData_Tokenizer(X_train, X_test,GloVe_DIR,MAX_NB_WORDS,MAX_SEQUENCE_LENGT
     X_train = text[0:len(X_train), ]
     X_test = text[len(X_train):, ]
     
-    word2vec_model = KeyedVectors.load_word2vec_format(GloVe_DIR)
+    word2vec_model = KeyedVectors.load_word2vec_format(GloVe_DIR, binary=True)
     embeddings_index = word2vec_model.wv
     del word2vec_model
 
