@@ -30,7 +30,7 @@ from RMDL import Global as G
 from RMDL import Plot as Plot
 
 
-def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
+def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, batch_size_rnn=64, batch_size_cnn=48,
                         EMBEDDING_DIM=50,MAX_SEQUENCE_LENGTH = 500, MAX_NB_WORDS = 75000,
                         GloVe_dir="", GloVe_file = "glove.6B.50d.txt",
                         sparse_categorical=True, random_deep=[3, 3, 3], epochs=[500, 500, 500],  plot=False,
@@ -41,7 +41,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
 
 
     """
-    Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
+    Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, batch_size_rnn=64, batch_size_cnn=48,
                         EMBEDDING_DIM=50,MAX_SEQUENCE_LENGTH = 500, MAX_NB_WORDS = 75000,
                         GloVe_dir="", GloVe_file = "glove.6B.50d.txt",
                         sparse_categorical=True, random_deep=[3, 3, 3], epochs=[500, 500, 500],  plot=False,
@@ -52,8 +52,12 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
 
         Parameters
         ----------
-            batch_size : Integer, , optional
+            batch_size_dnn : Integer, , optional
                 Number of samples per gradient update. If unspecified, it will default to 128
+            batch_size_rnn : Integer, , optional
+                Number of samples per gradient update. If unspecified, it will default to 64
+            batch_size_cnn : Integer, , optional
+                Number of samples per gradient update. If unspecified, it will default to 48
             MAX_NB_WORDS: int, optional
                 Maximum number of unique words in datasets, it will default to 75000.
             GloVe_dir: String, optional
@@ -209,7 +213,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
             model_history = model_DNN.fit(x_train_tfidf, y_train,
                               validation_data=(x_test_tfidf, y_test),
                               epochs=epochs[0],
-                              batch_size=batch_size,
+                              batch_size=batch_size_dnn,
                               callbacks=callbacks_list,
                               verbose=1)
             History.append(model_history)
@@ -221,7 +225,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                                   metrics=['accuracy'])
 
                 y_pr_ = model_tmp.predict_classes(x_test_tfidf,
-                                                  batch_size=batch_size)
+                                                  batch_size=batch_size_dnn)
                 y_pr.append(np.array(y_pr_))
                 score.append(accuracy_score(y_test, y_pr_))
             else:
@@ -230,7 +234,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                                   metrics=['accuracy'])
 
                 y_pr_ = model_tmp.predict(x_test_tfidf,
-                                          batch_size=batch_size)
+                                          batch_size=batch_size_dnn)
 
                 y_pr_ = np.argmax(y_pr_, axis=1)
                 y_pr.append(np.array(y_pr_))
@@ -289,7 +293,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
             model_history = model_RNN.fit(x_train_embedded, y_train,
                               validation_data=(x_test_embedded, y_test),
                               epochs=epochs[1],
-                              batch_size=batch_size,
+                              batch_size=batch_size_rnn,
                               callbacks=callbacks_list,
                               verbose=1)
             History.append(model_history)
@@ -300,7 +304,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                                   optimizer='rmsprop',
                                   metrics=['accuracy'])
 
-                y_pr_ = model_tmp.predict_classes(x_test_embedded, batch_size=batch_size)
+                y_pr_ = model_tmp.predict_classes(x_test_embedded, batch_size=batch_size_rnn)
                 y_pr.append(np.array(y_pr_))
                 score.append(accuracy_score(y_test, y_pr_))
             else:
@@ -308,7 +312,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                 model_tmp.compile(loss='categorical_crossentropy',
                                   optimizer='rmsprop',
                                   metrics=['accuracy'])
-                y_pr_ = model_tmp.predict(x_test_embedded, batch_size=batch_size)
+                y_pr_ = model_tmp.predict(x_test_embedded, batch_size=batch_size_rnn)
                 y_pr_ = np.argmax(y_pr_, axis=1)
                 y_pr.append(np.array(y_pr_))
                 y_test_temp = np.argmax(y_test, axis=1)
@@ -359,7 +363,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
             model_history = model_CNN.fit(x_train_embedded, y_train,
                                           validation_data=(x_test_embedded, y_test),
                                           epochs=epochs[2],
-                                          batch_size=batch_size,
+                                          batch_size=batch_size_cnn,
                                           callbacks=callbacks_list,
                                           verbose=1)
             History.append(model_history)
@@ -374,7 +378,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size=128,
                                   optimizer='rmsprop',
                                   metrics=['accuracy'])
 
-            y_pr_ = model_tmp.predict(x_test_embedded, batch_size=batch_size)
+            y_pr_ = model_tmp.predict(x_test_embedded, batch_size=batch_size_cnn)
             y_pr_ = np.argmax(y_pr_, axis=1)
             y_pr.append(np.array(y_pr_))
 
