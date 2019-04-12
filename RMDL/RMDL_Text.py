@@ -30,6 +30,10 @@ from RMDL import text_feature_extraction as txt
 from RMDL import Global as G
 from RMDL import Plot as Plot
 import memory_saving_gradients
+import logging
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+logger = logging.getLogger('RMDL_Text')
 
 
 def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, batch_size_rnn=64, batch_size_cnn=48,
@@ -114,8 +118,6 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     glove_directory = GloVe_dir
     GloVe_file = GloVe_file
 
-    print("Done1")
-
     GloVe_needed = random_deep[1] != 0 or random_deep[2] != 0
     
     # example_input  = [0,1,3]
@@ -144,7 +146,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     if not isinstance(y_train[0], list) and not isinstance(y_train[0], np.ndarray) and not sparse_categorical:
         #checking if labels are one hot or not otherwise dense_layer will give shape error 
         
-        print("converted_into_one_hot")
+        logger.info("converted_into_one_hot")
         y_train = _one_hot_values(y_train)
         y_test = _one_hot_values(y_test)
             
@@ -160,14 +162,14 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
             GloVe_DIR = os.path.join(glove_directory, GloVe_file)
 
         if not os.path.isfile(GloVe_DIR):
-            print("Could not find %s Set GloVe Directory in Global.py ", GloVe)
+            logger.info("Could not find %s Set GloVe Directory in Global.py ", GloVe)
             exit()
 
     G.setup()
     if random_deep[0] != 0:
         x_train_tfidf, x_test_tfidf = txt.loadData(x_train, x_test,MAX_NB_WORDS=MAX_NB_WORDS)
     if random_deep[1] != 0 or random_deep[2] != 0 :
-        print(GloVe_DIR)
+        logger.info(GloVe_DIR)
         x_train_embedded, x_test_embedded, word_index, embeddings_index = txt.loadData_Tokenizer(x_train, x_test,GloVe_DIR,MAX_NB_WORDS,MAX_SEQUENCE_LENGTH,EMBEDDING_DIM)
 
     del x_train
@@ -187,14 +189,14 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
             number_of_classes = len(y_train[0])
     else:
         number_of_classes = no_of_classes
-    print(number_of_classes)
+    logger.info(number_of_classes)
 
 
     i = 0
     while i < random_deep[0]:
         # model_DNN.append(Sequential())
         try:
-            print("DNN " + str(i))
+            logger.info("DNN " + str(i))
             filepath = "weights\weights_DNN_" + str(i) + ".hdf5"
             checkpoint = ModelCheckpoint(filepath,
                                          monitor='val_acc',
@@ -245,19 +247,19 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                 y_pr.append(np.array(y_pr_))
                 y_test_temp = np.argmax(y_test, axis=1)
                 score.append(accuracy_score(y_test_temp, y_pr_))
-            # print(y_proba)
+            # logger.info(y_proba)
             i += 1
             del model_tmp
             del model_DNN
 
         except Exception as e:
 
-            print("Check the Error \n {} ".format(e))
+            logger.warning("Check the Error \n {} ".format(e))
             if max_hidden_layer_dnn <= 3 and max_nodes_dnn <= 256:
-                print('ending...')
+                logger.error('ending...')
                 exit(1)
 
-            print("Error in model", i, "try to re-generate another model")
+            logger.warning("Error in model", i, "try to re-generate another model")
             if max_hidden_layer_dnn > 3:
                 max_hidden_layer_dnn -= 1
             if max_nodes_dnn > 256:
@@ -273,7 +275,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     i=0
     while i < random_deep[1]:
         try:
-            print("RNN " + str(i))
+            logger.info("RNN " + str(i))
             filepath = "weights\weights_RNN_" + str(i) + ".hdf5"
             checkpoint = ModelCheckpoint(filepath,
                                          monitor='val_acc',
@@ -329,12 +331,12 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
             del model_RNN
             gc.collect()
         except Exception as e:
-            print("Check the Error \n {} ".format(e))
+            logger.warning("Check the Error \n {} ".format(e))
             if max_hidden_layer_rnn <= 3 and max_nodes_rnn <= 64:
-                print('ending...')
+                logger.error('ending...')
                 exit(1)
 
-            print("Error in model", i, "try to re-generate another model")
+            logger.warning("Error in model", i, "try to re-generate another model")
             if max_hidden_layer_rnn > 3:
                 max_hidden_layer_rnn -= 1
             if max_nodes_rnn > 64:
@@ -345,7 +347,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     i = 0
     while i < random_deep[2]:
         try:
-            print("CNN " + str(i))
+            logger.info("CNN " + str(i))
 
             K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
 
@@ -402,12 +404,12 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
             del model_CNN
             gc.collect()
         except Exception as e:
-            print("Check the Error \n {} ".format(e))
+            logger.warning("Check the Error \n {} ".format(e))
             if max_hidden_layer_cnn <= 5 and max_nodes_cnn <= 128:
-                print('ending...')
+                logger.error('ending...')
                 exit(1)
 
-            print("Error in model", i, "try to re-generate an other model")
+            logger.warning("Error in model", i, "try to re-generate an other model")
             if max_hidden_layer_cnn > 5:
                 max_hidden_layer_cnn -= 1
             if max_nodes_cnn > 128:
@@ -451,9 +453,9 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
         F3 = precision_recall_fscore_support(y_test_temp, final_y, average='weighted')
     if plot:
         Plot.RMDL_epoch(History)
-    print(y_proba.shape)
-    print("Accuracy of",len(score),"models:",score)
-    print("Accuracy:",F_score)
-    print("F1_Micro:",F1)
-    print("F1_Macro:",F2)
-    print("F1_weighted:",F3)
+    logger.info(y_proba.shape)
+    logger.info("Accuracy of",len(score),"models:",score)
+    logger.info("Accuracy:",F_score)
+    logger.info("F1_Micro:",F1)
+    logger.info("F1_Macro:",F2)
+    logger.info("F1_weighted:",F3)

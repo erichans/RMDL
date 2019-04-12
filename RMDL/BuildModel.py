@@ -29,6 +29,11 @@ from keras.layers.merge import Concatenate
 import tensorflow as tf
 from keras import optimizers
 import random
+import logging
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+logger = logging.getLogger('BuildModel')
+
 
 def optimizors(random_optimizor):
     if random_optimizor:
@@ -43,7 +48,7 @@ def optimizors(random_optimizor):
             opt = optimizers.Adam()
         elif i==4:
             opt =optimizers.Nadam()
-        print(opt)
+        logger.info(opt)
     else:
         opt= optimizers.Adam()
     return opt
@@ -103,7 +108,7 @@ def Build_Model_DNN_Image(shape, number_of_classes, sparse_categorical, min_hidd
     Numberof_NOde = random.choice(values)
     Lvalues = list(range(min_hidden_layer_dnn,max_hidden_layer_dnn))
     nLayers =random.choice(Lvalues)
-    print(shape)
+    logger.info(shape)
     model.add(Flatten(input_shape=shape))
     model.add(Dense(Numberof_NOde,activation='relu'))
     model.add(Dropout(dropout))
@@ -264,7 +269,7 @@ def Build_Model_RNN_Text(word_index, embeddings_index, nclasses,  MAX_SEQUENCE_L
     values_layer = list(range(min_hidden_layer_rnn,max_hidden_layer_rnn))
 
     layer = random.choice(values_layer)
-    print(layer)
+    logger.info(layer)
     embedding_matrix = np.random.random((len(word_index) + 1, EMBEDDING_DIM))
     for word, i in word_index.items():
         try:
@@ -282,7 +287,7 @@ def Build_Model_RNN_Text(word_index, embeddings_index, nclasses,  MAX_SEQUENCE_L
                                 trainable=True))
 
     gru_node = random.choice(values)
-    print(gru_node)
+    logger.info(gru_node)
     for i in range(0,layer):
         model.add(GRU(gru_node,return_sequences=True, recurrent_dropout=0.2))
         model.add(Dropout(dropout))
@@ -391,13 +396,13 @@ def Build_Model_CNN_Text(word_index, embeddings_index, nclasses, MAX_SEQUENCE_LE
         values_layer = list(range(min_hidden_layer_cnn,max_hidden_layer_cnn))
         filter_sizes = []
         layer = random.choice(values_layer)
-        print("Filter  ",layer)
+        logger.info("Filter  ",layer)
         for fl in range(0,layer):
             filter_sizes.append((fl+2))
 
         values_node = list(range(min_nodes_cnn,max_nodes_cnn))
         node = random.choice(values_node)
-        print("Node  ", node)
+        logger.info("Node  ", node)
         sequence_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
         embedded_sequences = embedding_layer(sequence_input)
 

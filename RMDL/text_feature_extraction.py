@@ -23,6 +23,11 @@ from nltk.corpus import stopwords
 import re
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from gensim.models import KeyedVectors
+import logging
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+logger = logging.getLogger('text_feature_extraction')
+
 
 def transliterate(line):
     cedilla2latin = [[u'Á', u'A'], [u'á', u'a'], [u'Č', u'C'], [u'č', u'c'], [u'Š', u'S'], [u'š', u's']]
@@ -104,16 +109,20 @@ def loadData_Tokenizer(X_train, X_test,GloVe_DIR,MAX_NB_WORDS,MAX_SEQUENCE_LENGT
     np.random.seed(7)
     text = np.concatenate((X_train, X_test), axis=0)
     text = np.array(text)
+    logger.info(f'Tokenizing {MAX_NB_WORDS} tokens')
     tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
+    logger.info(f'fit_on_texts...')
     tokenizer.fit_on_texts(text)
+    logger.info(f'texts_to_sequences...')
     sequences = tokenizer.texts_to_sequences(text)
     word_index = tokenizer.word_index
+    logger.info(f'pad_sequences...')
     text = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
-    print('Found %s unique tokens.' % len(word_index))
+    logger.info('Found %s unique tokens.' % len(word_index))
     indices = np.arange(text.shape[0])
     # np.random.shuffle(indices)
     text = text[indices]
-    print(text.shape)
+    logger.info(text.shape)
     X_train = text[0:len(X_train), ]
     X_test = text[len(X_train):, ]
     
@@ -121,12 +130,15 @@ def loadData_Tokenizer(X_train, X_test,GloVe_DIR,MAX_NB_WORDS,MAX_SEQUENCE_LENGT
     embeddings_index = word2vec_model.wv
     del word2vec_model
 
-    print('Total %s word vectors.' % len(embeddings_index.vocab))
+    logger.info('Total %s word vectors.' % len(embeddings_index.vocab))
     return (X_train, X_test, word_index,embeddings_index)
 
 def loadData(X_train, X_test,MAX_NB_WORDS=75000):
+    logger.info(f'TfidfVectorizer {MAX_NB_WORDS} tokens')
     vectorizer_x = TfidfVectorizer(max_features=MAX_NB_WORDS)
+    logger.info(f'fit_transform x_train...')
     X_train = vectorizer_x.fit_transform(X_train).toarray()
+    logger.info(f'transform x_test...')
     X_test = vectorizer_x.transform(X_test).toarray()
-    print("tf-idf with",str(np.array(X_train).shape[1]),"features")
+    logger.info("tf-idf with",str(np.array(X_train).shape[1]),"features")
     return (X_train,X_test)
