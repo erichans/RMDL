@@ -282,7 +282,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                                          mode='max')
             callbacks_list = [checkpoint]
 
-            K.__dict__["gradients"] = memory_saving_gradients.gradients_memory
+            K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
 
             model_RNN, model_tmp = BuildModel.Build_Model_RNN_Text(word_index,
                                                                    embeddings_index,
@@ -347,7 +347,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
         try:
             print("CNN " + str(i))
 
-            K.__dict__["gradients"] = memory_saving_gradients.gradients_memory
+            K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
 
             model_CNN, model_tmp = BuildModel.Build_Model_CNN_Text(word_index,
                                                                    embeddings_index,
