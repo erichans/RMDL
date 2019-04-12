@@ -409,7 +409,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                 logger.error('ending...')
                 exit(1)
 
-            logger.warning("Error in model {i} try to re-generate an other model")
+            logger.warning(f"Error in model {i} try to re-generate an other model")
             if max_hidden_layer_cnn > 5:
                 max_hidden_layer_cnn -= 1
             if max_nodes_cnn > 128:
@@ -453,9 +453,9 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
         F3 = precision_recall_fscore_support(y_test_temp, final_y, average='weighted')
     if plot:
         Plot.RMDL_epoch(History)
-    logger.info(y_proba.shape)
-    logger.info(f"Accuracy of {len(score)} models: {score}")
-    logger.info(f"Accuracy: {F_score}")
-    logger.info(f"F1_Micro: {F1}")
-    logger.info(f"F1_Macro: {F2}")
-    logger.info(f"F1_weighted: {F3}")
+    logger.info("y_proba.shape: %s" % y_proba.shape)
+    logger.info("Accuracy of %d models: %s", len(score), score)
+    logger.info("Accuracy: %s" % F_score)
+    logger.info("F1_Micro: %s" % F1)
+    logger.info("F1_Macro: %s" % F2)
+    logger.info("F1_weighted: %s" % F3)
