@@ -162,7 +162,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
             GloVe_DIR = os.path.join(glove_directory, GloVe_file)
 
         if not os.path.isfile(GloVe_DIR):
-            logger.info("Could not find %s Set GloVe Directory in Global.py ", GloVe)
+            logger.info(f"Could not find %s Set GloVe Directory in Global.py " % GloVe)
             exit()
 
     G.setup()
@@ -196,7 +196,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     while i < random_deep[0]:
         # model_DNN.append(Sequential())
         try:
-            logger.info("DNN " + str(i))
+            logger.info(f"DNN {str(i)}")
             filepath = "weights\weights_DNN_" + str(i) + ".hdf5"
             checkpoint = ModelCheckpoint(filepath,
                                          monitor='val_acc',
@@ -259,7 +259,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                 logger.error('ending...')
                 exit(1)
 
-            logger.warning("Error in model", i, "try to re-generate another model")
+            logger.warning(f"Error in model {i} try to re-generate another model")
             if max_hidden_layer_dnn > 3:
                 max_hidden_layer_dnn -= 1
             if max_nodes_dnn > 256:
@@ -275,7 +275,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     i=0
     while i < random_deep[1]:
         try:
-            logger.info("RNN " + str(i))
+            logger.info(f"RNN {str(i)}")
             filepath = "weights\weights_RNN_" + str(i) + ".hdf5"
             checkpoint = ModelCheckpoint(filepath,
                                          monitor='val_acc',
@@ -336,7 +336,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                 logger.error('ending...')
                 exit(1)
 
-            logger.warning("Error in model", i, "try to re-generate another model")
+            logger.warning(f"Error in model {i} try to re-generate another model")
             if max_hidden_layer_rnn > 3:
                 max_hidden_layer_rnn -= 1
             if max_nodes_rnn > 64:
@@ -347,7 +347,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     i = 0
     while i < random_deep[2]:
         try:
-            logger.info("CNN " + str(i))
+            logger.info("CNN {str(i)}")
 
             # K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
 
@@ -409,7 +409,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                 logger.error('ending...')
                 exit(1)
 
-            logger.warning("Error in model", i, "try to re-generate an other model")
+            logger.warning("Error in model {i} try to re-generate an other model")
             if max_hidden_layer_cnn > 5:
                 max_hidden_layer_cnn -= 1
             if max_nodes_cnn > 128:
@@ -454,8 +454,8 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
     if plot:
         Plot.RMDL_epoch(History)
     logger.info(y_proba.shape)
-    logger.info("Accuracy of",len(score),"models:",score)
-    logger.info("Accuracy:",F_score)
-    logger.info("F1_Micro:",F1)
-    logger.info("F1_Macro:",F2)
-    logger.info("F1_weighted:",F3)
+    logger.info(f"Accuracy of {len(score)} models: {score}")
+    logger.info(f"Accuracy: {F_score}")
+    logger.info(f"F1_Micro: {F1}")
+    logger.info(f"F1_Macro: {F2}")
+    logger.info(f"F1_weighted: {F3}")

@@ -396,13 +396,13 @@ def Build_Model_CNN_Text(word_index, embeddings_index, nclasses, MAX_SEQUENCE_LE
         values_layer = list(range(min_hidden_layer_cnn,max_hidden_layer_cnn))
         filter_sizes = []
         layer = random.choice(values_layer)
-        logger.info("Filter  ",layer)
+        logger.info(f"Filter {layer}")
         for fl in range(0,layer):
             filter_sizes.append((fl+2))
 
         values_node = list(range(min_nodes_cnn,max_nodes_cnn))
         node = random.choice(values_node)
-        logger.info("Node  ", node)
+        logger.info(f"Node {node}")
         sequence_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
         embedded_sequences = embedding_layer(sequence_input)
 

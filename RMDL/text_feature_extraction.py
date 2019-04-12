@@ -140,5 +140,5 @@ def loadData(X_train, X_test,MAX_NB_WORDS=75000):
     X_train = vectorizer_x.fit_transform(X_train).toarray()
     logger.info(f'transform x_test...')
     X_test = vectorizer_x.transform(X_test).toarray()
-    logger.info("tf-idf with",str(np.array(X_train).shape[1]),"features")
+    logger.info(f"tf-idf with {str(np.array(X_train).shape[1])} features")
     return (X_train,X_test)
