@@ -29,7 +29,7 @@ from RMDL.Download import Download_Glove as GloVe
 from RMDL import text_feature_extraction as txt
 from RMDL import Global as G
 from RMDL import Plot as Plot
-import memory_saving_gradients
+#import memory_saving_gradients
 import logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
