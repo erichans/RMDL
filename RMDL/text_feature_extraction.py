@@ -17,6 +17,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
+import spacy
 import nltk
 from nltk import word_tokenize
 from nltk.corpus import stopwords
@@ -28,6 +29,9 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 logger = logging.getLogger('text_feature_extraction')
 
+stopwords = set(stopwords.words('portuguese'))
+nlp = spacy.load('pt_core_news_sm')
+stopwords |= nlp.Defaults.stop_words
 
 def transliterate(line):
     cedilla2latin = [[u'Á', u'A'], [u'á', u'a'], [u'Č', u'C'], [u'č', u'c'], [u'Š', u'S'], [u'š', u's']]
@@ -135,7 +139,7 @@ def loadData_Tokenizer(X_train, X_test,GloVe_DIR,MAX_NB_WORDS,MAX_SEQUENCE_LENGT
 
 def loadData(X_train, X_test,MAX_NB_WORDS=75000):
     logger.info(f'TfidfVectorizer {MAX_NB_WORDS} tokens')
-    vectorizer_x = TfidfVectorizer(max_features=MAX_NB_WORDS)
+    vectorizer_x = TfidfVectorizer(max_features=MAX_NB_WORDS, stop_words=stopwords)
     logger.info(f'fit_transform x_train...')
     X_train = vectorizer_x.fit_transform(X_train).toarray()
     logger.info(f'transform x_test...')
