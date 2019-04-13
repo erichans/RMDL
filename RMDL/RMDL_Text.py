@@ -204,7 +204,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
                                          save_best_only=True,
                                          mode='max')
             callbacks_list = [checkpoint]
-
+            K.clear_session()
             model_DNN, model_tmp = BuildModel.Build_Model_DNN_Text(x_train_tfidf.shape[1],
                                                                    number_of_classes,
                                                                    sparse_categorical,
@@ -285,7 +285,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
             callbacks_list = [checkpoint]
 
             # K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
-
+            K.clear_session()
             model_RNN, model_tmp = BuildModel.Build_Model_RNN_Text(word_index,
                                                                    embeddings_index,
                                                                    number_of_classes,
@@ -350,7 +350,7 @@ def Text_Classification(x_train, y_train, x_test,  y_test, batch_size_dnn=128, b
             logger.info("CNN {str(i)}")
 
             # K.__dict__["gradients"] = memory_saving_gradients.gradients_speed
-
+            K.clear_session()
             model_CNN, model_tmp = BuildModel.Build_Model_CNN_Text(word_index,
                                                                    embeddings_index,
                                                                    number_of_classes,
