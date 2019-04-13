@@ -139,7 +139,7 @@ def loadData_Tokenizer(X_train, X_test,GloVe_DIR,MAX_NB_WORDS,MAX_SEQUENCE_LENGT
 
 def loadData(X_train, X_test,MAX_NB_WORDS=75000):
     logger.info(f'TfidfVectorizer {MAX_NB_WORDS} tokens')
-    vectorizer_x = TfidfVectorizer(max_features=MAX_NB_WORDS, stop_words=stopwords)
+    vectorizer_x = TfidfVectorizer(max_features=MAX_NB_WORDS)
     logger.info(f'fit_transform x_train...')
     X_train = vectorizer_x.fit_transform(X_train).toarray()
     logger.info(f'transform x_test...')
